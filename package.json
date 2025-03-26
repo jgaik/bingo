@@ -10,6 +10,10 @@
   },
   "dependencies": {
     "@supabase/ssr": "^0.6.1",
+    "@yamori-design/icons": "^1.6.0",
+    "@yamori-design/react-components": "^2.8.5",
+    "@yamori-design/styles": "^2.4.7",
+    "@yamori-shared/react-utilities": "^1.7.0",
     "next": "15.2.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

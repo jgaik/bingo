@@ -108,14 +108,14 @@ export type Database = {
           }
         ];
       };
-      users: {
+      user_profiles: {
         Row: {
           id: string;
           name: string;
         };
         Insert: {
           id: string;
-          name?: string;
+          name: string;
         };
         Update: {
           id?: string;
