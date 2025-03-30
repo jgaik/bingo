@@ -5,8 +5,8 @@ import {
   NavigationBarLayoutProps,
 } from "@yamori-design/react-components";
 
-type LayoutProps = NavigationBarLayoutProps;
+type LayoutWrapperProps = NavigationBarLayoutProps;
 
-export default function Layout(props: LayoutProps) {
+export default function LayoutWrapper(props: LayoutWrapperProps) {
   return <NavigationBarLayout {...props} />;
 }

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { PropsWithChildren } from "react";
-import Layout from "@/app/components/layout";
+import LayoutWrapper from "@/app/components/layout-wrapper";
 import Link from "@/app/components/link";
 import { createClient } from "@/utils/supabase/server";
 import "@yamori-design/styles/dist/global.css";
@@ -31,7 +31,7 @@ export default async function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang="en">
       <body>
-        <Layout links={links}> {children}</Layout>
+        <LayoutWrapper links={links}> {children}</LayoutWrapper>
       </body>
     </html>
   );
