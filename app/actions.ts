@@ -44,3 +44,25 @@ export async function signIn(formData: FormData) {
     redirect("/");
   }
 }
+
+export async function createBingo(formData: FormData) {
+  const { name, fields } = getObjectFromFormData(formData);
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user?.id) throw new Error();
+
+  const { data, error } = await supabase
+    .from("bingos")
+    .insert({ name, fields: fields.split(","), user_id: user.id })
+    .select();
+
+  if (error) {
+    console.error(error);
+  } else {
+    redirect(`/bingos/${data[0].id}`);
+  }
+}

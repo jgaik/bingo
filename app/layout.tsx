@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { PropsWithChildren } from "react";
-import LayoutWrapper from "@/app/components/layout-wrapper";
-import Link from "@/app/components/link";
+import { PropsWithChildren, ReactElement } from "react";
+import { Link } from "@/components";
 import { createClient } from "@/utils/supabase/server";
+import { NavigationBarLayout } from "@yamori-design/react-components";
 import "@yamori-design/styles/dist/global.css";
 
 export const metadata: Metadata = {
@@ -10,13 +10,20 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: PropsWithChildren) {
-  const user = await createClient(({ auth }) => auth.getUser());
+  const { data, error } = await createClient(({ auth }) => auth.getUser());
 
-  const links = [];
+  const links: ReactElement[] = [
+    <Link key="browse" href="/">
+      Browse
+    </Link>,
+    <Link key="new" href="/bingos/new">
+      New
+    </Link>,
+  ];
 
-  if (!user.error) {
+  if (!error) {
     links.push(
-      <Link key="profile" href="/profile">
+      <Link key="profile" href={`/users/${data.user.id}`}>
         Profile
       </Link>
     );
@@ -31,7 +38,9 @@ export default async function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang="en">
       <body>
-        <LayoutWrapper links={links}> {children}</LayoutWrapper>
+        <NavigationBarLayout links={links}>
+          <main>{children}</main>
+        </NavigationBarLayout>
       </body>
     </html>
   );
