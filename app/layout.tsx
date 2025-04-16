@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
-import { PropsWithChildren, ReactElement } from "react";
-import { Link } from "@/components";
+import { PropsWithChildren } from "react";
 import { createClient } from "@/utils/supabase/server";
-import { NavigationBarLayout } from "@yamori-design/react-components";
+import {
+  LinkProps,
+  NavigationBarLayout,
+} from "@yamori-design/react-components";
 import "@yamori-design/styles/dist/global.css";
 
 export const metadata: Metadata = {
@@ -12,27 +14,15 @@ export const metadata: Metadata = {
 export default async function RootLayout({ children }: PropsWithChildren) {
   const { data, error } = await createClient(({ auth }) => auth.getUser());
 
-  const links: ReactElement[] = [
-    <Link key="browse" href="/">
-      Browse
-    </Link>,
-    <Link key="new" href="/bingos/new">
-      New
-    </Link>,
+  const links: Array<LinkProps> = [
+    { href: "/", children: "Browse" },
+    { href: "/bingos/new", children: "New" },
   ];
 
   if (!error) {
-    links.push(
-      <Link key="profile" href={`/users/${data.user.id}`}>
-        Profile
-      </Link>
-    );
+    links.push({ href: `/users/${data.user.id}`, children: "Profile" });
   } else {
-    links.push(
-      <Link key="sign-in" href="/sign-in">
-        Sign in
-      </Link>
-    );
+    links.push({ href: "/sign-in", children: "Sign in" });
   }
 
   return (

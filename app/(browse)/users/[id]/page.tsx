@@ -1,4 +1,4 @@
-import { signOut } from "@/app/actions";
+import { signOut } from "@/actions/auth";
 import { createClient } from "@/utils/supabase/server";
 import { Button } from "@yamori-design/react-components";
 
