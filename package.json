@@ -14,7 +14,7 @@
     "@yamori-design/react-components": "^2.8.5",
     "@yamori-design/styles": "^2.4.7",
     "@yamori-shared/react-utilities": "^1.7.0",
-    "next": "15.2.3",
+    "next": "^15.2.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
@@ -24,7 +24,8 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "15.2.3",
+    "eslint-config-next": "^15.2.3",
+    "sass": "^1.86.3",
     "typescript": "^5"
   }
 }

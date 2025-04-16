@@ -1,0 +1,26 @@
+.bingo-sheet {
+  aspect-ratio: 1 / 1;
+  display: grid;
+  padding: var(--yamori-spacing-large);
+  gap: var(--yamori-border-width-medium);
+}
+
+.button {
+  all: unset;
+  background-color: var(--yamori-surface-primary);
+  text-align: center;
+
+  &,
+  &:focus-visible {
+    outline: var(--yamori-border-width-medium) solid
+      var(--yamori-border-primary);
+    outline-offset: 0;
+  }
+
+  &:enabled {
+    &:hover,
+    &:focus {
+      background-color: var(--yamori-surface-primary-disabled);
+    }
+  }
+}
