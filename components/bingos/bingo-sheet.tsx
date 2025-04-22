@@ -1,43 +1,95 @@
-import { useMemo } from "react";
+"use client";
+
+import { startTransition, useCallback, useMemo, useOptimistic } from "react";
 import styles from "./bingo-sheet.module.scss";
+
+type BingoSheetFieldProps = {
+  children: BingoSheetProps["fields"][number];
+  index: number;
+  isChecked: (fieldBit: bigint) => boolean;
+} & Pick<BingoSheetProps, "readonly" | "onChange">;
+
+const BingoSheetField: React.FC<BingoSheetFieldProps> = ({
+  children,
+  readonly,
+  index,
+  isChecked,
+  onChange,
+}) => {
+  const fieldBit = 1n << BigInt(index);
+
+  return (
+    <label className={styles["field"]}>
+      {children}
+      <input
+        readOnly={readonly}
+        disabled={readonly}
+        type="checkbox"
+        checked={isChecked(fieldBit)}
+        onChange={() => {
+          onChange?.(fieldBit);
+        }}
+      />
+    </label>
+  );
+};
 
 type BingoSheetProps = {
   fields: string[];
-  checkedFields?: number;
+  checked?: bigint;
   permutation?: number[];
   readonly?: boolean;
+  onChange?: (flip: bigint) => void;
 };
 
 export const BingoSheet: React.FC<BingoSheetProps> = ({
   fields,
   permutation,
   readonly,
+  checked = BigInt(0),
+  onChange,
 }) => {
-  const width = Math.ceil(Math.sqrt(fields.length));
+  const [optimisticChecked, setOptimisticChecked] = useOptimistic(
+    checked,
+    (state, flip: bigint) => state ^ flip
+  );
+
+  const isFieldChecked = useCallback(
+    (fieldBit: bigint) => (optimisticChecked & fieldBit) !== 0n,
+    [optimisticChecked]
+  );
+
+  const columns = Math.ceil(Math.sqrt(fields.length));
 
   const orderedFields = useMemo(() => {
-    const ordered = permutation
-      ? permutation.map((idx) => fields[idx])
-      : fields;
+    if (permutation) return permutation.map((idx) => fields[idx]);
 
-    const filled = ordered.concat(
-      new Array(width * width - ordered.length).fill("")
-    );
-
-    return filled;
-  }, [fields, permutation, width]);
+    return fields.concat(new Array(columns * columns - fields.length).fill(""));
+  }, [fields, permutation, columns]);
 
   return (
     <div
       className={styles["bingo-sheet"]}
+      role={readonly ? "presentation" : "grid"}
       style={{
-        gridTemplate: `repeat(${width}, 1fr) / repeat(${width}, 1fr)`,
+        gridTemplateColumns: `repeat(${columns}, 1fr)`,
       }}
     >
-      {orderedFields.map((field) => (
-        <button disabled={readonly} className={styles["button"]} key={field}>
+      {orderedFields.map((field, index) => (
+        <BingoSheetField
+          index={index}
+          isChecked={isFieldChecked}
+          onChange={(flip) => {
+            startTransition(() => {
+              setOptimisticChecked(flip);
+              onChange?.(flip);
+            });
+          }}
+          readonly={readonly}
+          key={field}
+        >
           {field}
-        </button>
+        </BingoSheetField>
       ))}
     </div>
   );

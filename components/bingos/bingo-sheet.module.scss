@@ -5,22 +5,31 @@
   gap: var(--yamori-border-width-medium);
 }
 
-.button {
-  all: unset;
+.field {
   background-color: var(--yamori-surface-primary);
   text-align: center;
+  outline: var(--yamori-border-width-medium) solid var(--yamori-border-primary);
 
-  &,
-  &:focus-visible {
-    outline: var(--yamori-border-width-medium) solid
-      var(--yamori-border-primary);
-    outline-offset: 0;
+  input {
+    display: none;
   }
 
-  &:enabled {
+  &:has(input:enabled) {
+    cursor: pointer;
+
     &:hover,
     &:focus {
       background-color: var(--yamori-surface-primary-disabled);
+    }
+  }
+
+  &:has(input:checked) {
+    background-color: var(--yamori-surface-action);
+    color: var(--yamori-text-on-action);
+
+    &:hover,
+    &:focus {
+      background-color: var(--yamori-surface-action-hover);
     }
   }
 }

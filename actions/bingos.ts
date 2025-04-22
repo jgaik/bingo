@@ -1,5 +1,6 @@
 "use server";
 
+import { Tables } from "@/types";
 import { createClient } from "@/utils/supabase/server";
 import { getObjectFromFormData } from "@yamori-shared/react-utilities";
 import { redirect } from "next/navigation";
@@ -26,7 +27,7 @@ export async function createBingo(formData: FormData) {
   }
 }
 
-export async function playBingo(bingoId: number) {
+export async function playBingo(bingoId: Tables<"bingos">["id"]) {
   const supabase = await createClient();
 
   const {
@@ -53,5 +54,25 @@ export async function playBingo(bingoId: number) {
     console.error(error);
   } else {
     redirect(`/bingos/${bingoId}/play`);
+  }
+}
+
+export async function updateBingoSheet(
+  id: Tables<"bingo_sheets">["id"],
+  checkedFields: Tables<"bingo_sheets">["checked_fields"]
+) {
+  const { data, error } = await createClient((supabase) =>
+    supabase
+      .from("bingo_sheets")
+      .update({ checked_fields: checkedFields })
+      .eq("id", id)
+      .select()
+      .single()
+  );
+
+  if (error) {
+    throw new Error(error.message);
+  } else {
+    return data;
   }
 }
