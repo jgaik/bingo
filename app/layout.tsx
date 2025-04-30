@@ -5,6 +5,7 @@ import {
   LinkProps,
   NavigationBarLayout,
 } from "@yamori-design/react-components";
+import styles from "./layout.module.scss";
 import "@yamori-design/styles/dist/global.css";
 
 export const metadata: Metadata = {
@@ -29,7 +30,7 @@ export default async function RootLayout({ children }: PropsWithChildren) {
     <html lang="en">
       <body>
         <NavigationBarLayout links={links}>
-          <main>{children}</main>
+          <main className={styles["app"]}>{children}</main>
         </NavigationBarLayout>
       </body>
     </html>

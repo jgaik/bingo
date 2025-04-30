@@ -1,4 +1,4 @@
-import { PlayBingoSheet } from "@/components/bingos/play-bingo-sheet";
+import { PlayBingoSheet } from "@/components/bingos";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 

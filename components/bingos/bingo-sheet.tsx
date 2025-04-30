@@ -86,7 +86,7 @@ export const BingoSheet: React.FC<BingoSheetProps> = ({
             });
           }}
           readonly={readonly}
-          key={field}
+          key={index}
         >
           {field}
         </BingoSheetField>

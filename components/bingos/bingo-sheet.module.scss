@@ -1,11 +1,12 @@
 .bingo-sheet {
-  aspect-ratio: 1 / 1;
   display: grid;
   padding: var(--yamori-spacing-large);
   gap: var(--yamori-border-width-medium);
+  flex: 1;
 }
 
 .field {
+  // aspect-ratio: 1 / 1;
   background-color: var(--yamori-surface-primary);
   text-align: center;
   outline: var(--yamori-border-width-medium) solid var(--yamori-border-primary);

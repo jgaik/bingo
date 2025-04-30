@@ -1,0 +1,18 @@
+.app {
+  display: flex;
+}
+
+// landscape
+@media (min-aspect-ratio: 1 / 1) {
+  .app {
+    flex-direction: row;
+    height: 100%;
+  }
+}
+
+// portrait
+@media (max-aspect-ratio: 1 / 1) {
+  .app {
+    flex-direction: column;
+  }
+}
