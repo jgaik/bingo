@@ -1,4 +1,3 @@
-import { playBingo } from "@/actions/bingos";
 import { BingoSheet } from "@/components/bingos";
 import { createClient } from "@/utils/supabase/server";
 import { Button, Form, Input } from "@yamori-design/react-components";
@@ -19,12 +18,7 @@ export default async function Bingo({ params }: BingoProps) {
 
   return (
     <div>
-      <Form
-        action={async () => {
-          "use server";
-          return playBingo(id);
-        }}
-      >
+      <Form action={`/bingos/${id}/play`}>
         <Form.Field label="Name">
           <Input readOnly id="name" value={data.name} />
         </Form.Field>

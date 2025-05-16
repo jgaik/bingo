@@ -1,6 +1,5 @@
+import { playBingo } from "@/actions/bingos";
 import { PlayBingoSheet } from "@/components/bingos";
-import { createClient } from "@/utils/supabase/server";
-import { redirect } from "next/navigation";
 
 type PlayBingoProps = {
   params: Promise<{ id: string }>;
@@ -8,28 +7,7 @@ type PlayBingoProps = {
 
 export default async function PlayBingo({ params }: PlayBingoProps) {
   const { id } = await params;
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-    error: userError,
-  } = await supabase.auth.getUser();
-
-  if (userError || !user) throw new Error();
-
-  const { data: bingoSheet, error } = await supabase
-    .from("bingo_sheets")
-    .select(
-      `id,
-      permutation,
-      checked_fields,
-      bingo: bingo_id (name, fields)`
-    )
-    .eq("user_id", user.id)
-    .eq("bingo_id", id)
-    .maybeSingle();
-
-  if (!bingoSheet || error) redirect(`/bingos/${id}`);
+  const bingoSheet = await playBingo(id);
 
   return (
     <div>

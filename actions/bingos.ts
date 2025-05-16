@@ -27,34 +27,52 @@ export async function createBingo(formData: FormData) {
   }
 }
 
-export async function playBingo(bingoId: Tables<"bingos">["id"]) {
+export async function playBingo(bingoId: Tables<"bingos">["id"]): Promise<
+  Pick<Tables<"bingo_sheets">, "id" | "permutation" | "checked_fields"> & {
+    bingo: Pick<Tables<"bingos">, "name" | "fields">;
+  }
+> {
   const supabase = await createClient();
 
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user?.id) throw new Error();
+  if (!user?.id) redirect(`bingos/${bingoId}/play/local`);
 
-  const { data } = await supabase
+  let { data, error } = await supabase
     .from("bingo_sheets")
-    .select("id")
+    .select(
+      `id,
+      permutation,
+      checked_fields,
+      bingo: bingo_id (name, fields)`
+    )
     .eq("user_id", user.id)
     .eq("bingo_id", bingoId)
     .maybeSingle();
 
-  if (data) return redirect(`/bingos/${bingoId}/play`);
+  if (error) throw new Error(error.message);
+  if (data) return data;
 
-  const { error } = await supabase.from("bingo_sheets").insert({
-    user_id: user.id,
-    bingo_id: bingoId,
-  });
+  ({ data, error } = await supabase
+    .from("bingo_sheets")
+    .insert({
+      user_id: user.id,
+      bingo_id: bingoId,
+    })
+    .select(
+      `id,
+      permutation,
+      checked_fields,
+      bingo: bingo_id (name, fields)`
+    )
+    .single());
 
-  if (error) {
-    console.error(error);
-  } else {
-    redirect(`/bingos/${bingoId}/play`);
-  }
+  if (error) throw new Error(error.message);
+  if (!data) redirect(`/bingos/${bingoId}`);
+
+  return data;
 }
 
 export async function updateBingoSheet(
