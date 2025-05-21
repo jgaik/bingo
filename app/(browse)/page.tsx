@@ -1,17 +1,10 @@
-import { BingoCard } from "@/components/bingos";
+import { BingoList } from "@/components/bingos";
 import { createClient } from "@/utils/supabase/server";
 
-export default async function Home() {
+export default async function Browse() {
   const { data } = await createClient((supabase) =>
-    supabase.from("bingos").select("id, name, user: user_id (name)")
+    supabase.from("bingos").select("id, name, fields, user: user_id (name)")
   );
-  return (
-    <ul>
-      {data?.map((bingo) => (
-        <li key={bingo.id}>
-          <BingoCard {...bingo} />
-        </li>
-      ))}
-    </ul>
-  );
+
+  return <BingoList bingos={data} />;
 }
