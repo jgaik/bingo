@@ -17,7 +17,7 @@ export default async function Bingo({ params }: BingoProps) {
   if (!data) redirect("/");
 
   return (
-    <div>
+    <div style={{ display: "flex", flexDirection: "column" }}>
       <Form action={`/bingos/${id}/play`}>
         <Form.Field label="Name">
           <Input readOnly id="name" value={data.name} />

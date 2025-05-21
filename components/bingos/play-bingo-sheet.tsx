@@ -12,13 +12,13 @@ type PlayBingoSheetProps = Pick<
 
 export const PlayBingoSheet: React.FC<PlayBingoSheetProps> = ({
   id,
-  checked_fields,
+  checked_fields: checkedFields,
   bingo,
   permutation,
 }) => {
   const [checked, setChecked] = useReducer(
     (_, next: string) => BigInt(next),
-    checked_fields,
+    checkedFields,
     BigInt
   );
 
@@ -29,7 +29,7 @@ export const PlayBingoSheet: React.FC<PlayBingoSheetProps> = ({
       checked={checked}
       onChange={(flip) => {
         updateBingoSheet(id, (checked ^ flip).toString())
-          .then(({ checked_fields }) => setChecked(checked_fields))
+          .then((updatedBingo) => setChecked(updatedBingo["checked_fields"]))
           .catch(console.error);
       }}
     />

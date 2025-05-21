@@ -1,6 +1,12 @@
 "use client";
 
-import { startTransition, useCallback, useMemo, useOptimistic } from "react";
+import {
+  CSSProperties,
+  startTransition,
+  useCallback,
+  useMemo,
+  useOptimistic,
+} from "react";
 import styles from "./bingo-sheet.module.scss";
 
 type BingoSheetFieldProps = {
@@ -70,27 +76,30 @@ export const BingoSheet: React.FC<BingoSheetProps> = ({
   return (
     <div
       className={styles["bingo-sheet"]}
-      role={readonly ? "presentation" : "grid"}
-      style={{
-        gridTemplateColumns: `repeat(${columns}, 1fr)`,
-      }}
+      style={
+        {
+          "--columns": columns,
+        } as CSSProperties
+      }
     >
-      {orderedFields.map((field, index) => (
-        <BingoSheetField
-          index={index}
-          isChecked={isFieldChecked}
-          onChange={(flip) => {
-            startTransition(() => {
-              setOptimisticChecked(flip);
-              onChange?.(flip);
-            });
-          }}
-          readonly={readonly}
-          key={index}
-        >
-          {field}
-        </BingoSheetField>
-      ))}
+      <div className={styles["grid"]} role={readonly ? "presentation" : "grid"}>
+        {orderedFields.map((field, index) => (
+          <BingoSheetField
+            index={index}
+            isChecked={isFieldChecked}
+            onChange={(flip) => {
+              startTransition(() => {
+                setOptimisticChecked(flip);
+                onChange?.(flip);
+              });
+            }}
+            readonly={readonly}
+            key={index}
+          >
+            {field}
+          </BingoSheetField>
+        ))}
+      </div>
     </div>
   );
 };

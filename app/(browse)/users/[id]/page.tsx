@@ -20,13 +20,13 @@ export default async function User({ params }: UserProps) {
   const { data: userData } = await supabase.auth.getUser();
 
   return (
-    <>
+    <div>
       {data?.name}
       {userData.user?.id === id && (
         <Button variant="text" onClick={signOut}>
           Sing out
         </Button>
       )}
-    </>
+    </div>
   );
 }
