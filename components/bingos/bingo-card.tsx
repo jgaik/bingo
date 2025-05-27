@@ -10,15 +10,19 @@ const imageLoader: ImageLoader = ({ src, quality }) => {
   return `https://placehold.co/${src}?text=${quality}x${quality}`;
 };
 
-type BingoCardProps = Pick<Tables<"bingos">, "id" | "name" | "fields"> & {
-  user: Pick<Tables<"user_profiles">, "name">;
+export type BingoCardProps = Pick<
+  Tables<"bingos">,
+  "id" | "name" | "fields"
+> & {
+  user?: Pick<Tables<"user_profiles">, "name">;
+  link: string;
 };
 
 export const BingoCard: React.FC<BingoCardProps> = ({
-  id,
   name,
   fields,
   user,
+  link,
 }) => {
   const linkRef = useRef<ComponentRef<typeof Link>>(null);
   const size = Math.sqrt(fields.length);
@@ -27,7 +31,7 @@ export const BingoCard: React.FC<BingoCardProps> = ({
       className={styles["bingo-card"]}
       onClick={() => linkRef.current?.click()}
       header={
-        <Link ref={linkRef} href={`/bingos/${id}`}>
+        <Link ref={linkRef} href={link}>
           {name}
         </Link>
       }
@@ -43,7 +47,7 @@ export const BingoCard: React.FC<BingoCardProps> = ({
         />
       }
     >
-      <span>Author: {user.name}</span>
+      {user && <span>Author: {user.name}</span>}
     </Card>
   );
 };

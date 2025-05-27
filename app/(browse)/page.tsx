@@ -6,5 +6,5 @@ export default async function Browse() {
     supabase.from("bingos").select("id, name, fields, user: user_id (name)")
   );
 
-  return <BingoList bingos={data} />;
+  return <BingoList bingos={data} linkType="view" />;
 }
