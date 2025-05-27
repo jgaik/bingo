@@ -27,7 +27,7 @@ export default async function User({ params }: UserProps) {
 
   const { data: playingBingoSheets } = await supabase
     .from("bingo_sheets")
-    .select("bingo_id, bingo: bingo_id (name, fields)")
+    .select("bingo_id, bingo: bingo_id (name, fields, user: user_id (name))")
     .eq("user_id", id);
 
   const isMyProfile = currentUserData.user?.id === id;
