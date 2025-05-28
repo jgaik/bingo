@@ -8,5 +8,5 @@ export default async function Browse() {
     .select("id, name, fields, user: user_id (name)")
     .then((res) => res.data);
 
-  return <BingoList bingosPromise={bingosPromise} linkType="view" />;
+  return <BingoList bingosPromise={bingosPromise} />;
 }

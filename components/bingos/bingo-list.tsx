@@ -6,12 +6,12 @@ import { use } from "react";
 
 type BingoListProps = {
   bingosPromise: PromiseLike<Nullable<Array<Omit<BingoCardProps, "link">>>>;
-  linkType: "view" | "play";
+  linkType?: "view" | "play";
 };
 
 export const BingoList: React.FC<BingoListProps> = ({
   bingosPromise,
-  linkType,
+  linkType = "view",
 }) => {
   const bingos = use(bingosPromise);
 

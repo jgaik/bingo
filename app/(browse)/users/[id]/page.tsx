@@ -58,7 +58,7 @@ export default async function User({ params }: UserProps) {
       </Details>
       <Details open summary="Created">
         <Suspense fallback={<Loading />}>
-          <BingoList bingosPromise={createBingosPromise} linkType="view" />
+          <BingoList bingosPromise={createBingosPromise} />
         </Suspense>
       </Details>
     </div>
