@@ -2,16 +2,24 @@
 import { List } from "@yamori-design/react-components";
 import { BingoCard, BingoCardProps } from "./bingo-card";
 import { Nullable } from "@yamori-shared/react-utilities";
+import { use } from "react";
 
 type BingoListProps = {
-  bingos: Nullable<Array<Omit<BingoCardProps, "link">>>;
+  bingosPromise: PromiseLike<Nullable<Array<Omit<BingoCardProps, "link">>>>;
   linkType: "view" | "play";
 };
 
-export const BingoList: React.FC<BingoListProps> = ({ bingos, linkType }) => {
+export const BingoList: React.FC<BingoListProps> = ({
+  bingosPromise,
+  linkType,
+}) => {
+  const bingos = use(bingosPromise);
+
+  if (!bingos) return "No bingos";
+
   return (
     <List>
-      {bingos?.map((bingo) => (
+      {bingos.map((bingo) => (
         <List.Item
           key={bingo.id}
           label={

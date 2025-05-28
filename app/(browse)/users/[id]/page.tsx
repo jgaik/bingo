@@ -1,7 +1,8 @@
 import { signOut } from "@/actions/auth";
 import { BingoList } from "@/components/bingos";
 import { createClient } from "@/utils/supabase/server";
-import { Button, Details } from "@yamori-design/react-components";
+import { Button, Details, Loading } from "@yamori-design/react-components";
+import { Suspense } from "react";
 
 type UserProps = {
   params: Promise<{ id: string }>;
@@ -20,15 +21,22 @@ export default async function User({ params }: UserProps) {
 
   const { data: currentUserData } = await supabase.auth.getUser();
 
-  const { data: createBingos } = await supabase
+  const createBingosPromise = supabase
     .from("bingos")
     .select("id, name, fields")
-    .eq("user_id", id);
+    .eq("user_id", id)
+    .then((res) => res.data);
 
-  const { data: playingBingoSheets } = await supabase
+  const playingBingoSheetsPromise = supabase
     .from("bingo_sheets")
     .select("bingo_id, bingo: bingo_id (name, fields, user: user_id (name))")
-    .eq("user_id", id);
+    .eq("user_id", id)
+    .then((res) =>
+      res.data?.map(({ bingo_id: id, bingo }) => ({
+        id,
+        ...bingo,
+      }))
+    );
 
   const isMyProfile = currentUserData.user?.id === id;
 
@@ -40,22 +48,19 @@ export default async function User({ params }: UserProps) {
           Sing out
         </Button>
       )}
-      {playingBingoSheets && (
-        <Details summary="Playing">
+      <Details open summary="Playing">
+        <Suspense fallback={<Loading />}>
           <BingoList
-            bingos={playingBingoSheets.map(({ bingo_id: id, bingo }) => ({
-              id,
-              ...bingo,
-            }))}
+            bingosPromise={playingBingoSheetsPromise}
             linkType={isMyProfile ? "play" : "view"}
           />
-        </Details>
-      )}
-      {createBingos && (
-        <Details summary="Created">
-          <BingoList bingos={createBingos} linkType="view" />
-        </Details>
-      )}
+        </Suspense>
+      </Details>
+      <Details open summary="Created">
+        <Suspense fallback={<Loading />}>
+          <BingoList bingosPromise={createBingosPromise} linkType="view" />
+        </Suspense>
+      </Details>
     </div>
   );
 }
