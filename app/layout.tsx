@@ -29,7 +29,11 @@ export default async function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang="en">
       <body>
-        <NavigationBarLayout links={links}>
+        <NavigationBarLayout
+          githubHref="https://github.com/jgaik/bingo"
+          homeHref="https://jgaik.github.io/"
+          links={links}
+        >
           <main className={styles["app"]}>{children}</main>
         </NavigationBarLayout>
       </body>
